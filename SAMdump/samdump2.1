@@ -1,0 +1,26 @@
+.TH SAMDUMP2 1 "April 2012" "Version 3.0.0"
+
+.SH NAME
+.B samdump2
+retrieves syskey and extract hashes from Windows 2k/NT/XP/Vista SAM.
+.SH SYNOPSIS
+samdump2 [-d] [-o file] <system hive> <sam hive>
+.SH OPTIONS
+.TP
+\fB\-d\fR
+enable debugging
+.TP
+\fB\-h\fR
+display this help
+.TP
+\fB\-o file\fR
+write output to file
+.SH EXAMPLE
+samdump2 -o out /mnt/ntfs/WINDOWS/system32/config/SYSTEM /mnt/ntfs/WINDOWS/system32/config/sam
+.SH AUTHOR
+This manual page was written by Adam Cecile <gandalf@le-vert.net> for the Debian system (but may be used by others) and modified by Objectif Securite <info@objectif-securite.ch>
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 2 or any later version published by the Free Software Foundation
+On Debian systems, the complete text of the GNU General Public License can be found in /usr/share/common-licenses/GPL.
+.SH SEE ALSO
+.br
+.B ophcrack(1)

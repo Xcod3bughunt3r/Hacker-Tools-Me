@@ -1,0 +1,9 @@
+echo -e "\n[+] Starting WebMap docker setup"
+echo "[+] Creating required dirs"
+mkdir /tmp/webmap
+echo "[+] Docker run webmap"
+docker run -d --name webmap -h webmap -p 8000:8000 -v /tmp/webmap:/opt/xml rev3rse/webmap
+echo "[+] Done"
+echo -e "\nNow you can point your browser to http://localhost:8000"
+echo "Please, take few seconds to support this project on GitHub"
+echo -e "https://github.com/Rev3rseSecurity/WebMap\n"
